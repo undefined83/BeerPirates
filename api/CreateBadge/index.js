@@ -26,16 +26,17 @@ const getAuthToken = (req) => {
 };
 
 const drawImage = async (req) => {
+
   const bodyBuffer = Buffer.from(req.body);
   const boundary = multipart.getBoundary(req.headers["content-type"]);
-  const parts = multipart.parse(bodyBuffer, boundary);
+  const parts = multipart.parse(bodyBuffer, boundary); 
 
   const canvas = createCanvas(templateWH[0], templateWH[1]);
   const ctx = canvas.getContext("2d");
 
   // Ideally this Azure Function should call the `/userprofile` endpoint to get  
   // the user name instead of relying on the client to send it
-  const firstLetter = parts.filter((r) => r.name === "firstLetter")[0].data.toString();
+  const firstLetter= parts.filter(r => r.name === "firstLetter")[0].data.toString();
 
   const template = await loadImage(badgeTemplateUrl);
   ctx.drawImage(template, 0, 0, templateWH[0], templateWH[1]);
@@ -45,14 +46,23 @@ const drawImage = async (req) => {
   ctx.fillText(firstLetter, letterStart[0], letterStart[1]);
 
   const profileImage = await loadImage(parts[0].data);
-  ctx.drawImage(profileImage, profilePictureStart[0], profilePictureStart[1], profilePictureWH[0], profilePictureWH[1]);
+  ctx.drawImage(
+    profileImage,
+    profilePictureStart[0],
+    profilePictureStart[1],
+    profilePictureWH[0],
+    profilePictureWH[1]
+  );
 
   return canvas;
 };
 
 module.exports = async function (context, req) {
   const accessToken = getAuthToken(req);
-  const jwt = await oktaJwtVerifier.verifyAccessToken(accessToken, "api://default");
+  const jwt = await oktaJwtVerifier.verifyAccessToken(
+    accessToken,
+    "api://default"
+  );
 
   const canvas = await drawImage(req);
 

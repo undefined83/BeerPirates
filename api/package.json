@@ -6,6 +6,10 @@
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@okta/jwt-verifier": "^2.3.0",
+    "@types/parse-multipart": "^1.0.0",
+    "canvas": "^2.9.0",
+    "parse-multipart-data": "^1.2.1"
+  }
 }
